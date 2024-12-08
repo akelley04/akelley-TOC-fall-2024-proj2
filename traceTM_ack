@@ -69,10 +69,7 @@ def bfs(transitions, transitions_dict, info):
                                 add_config = go_left(leftstr, rightstr, trans)
                             level_configs.append(add_config)
                         else:
-                            if trans[-1] == 'R':
-                                add_config = go_right(leftstr, rightstr, trans, reject_state, rej=True)
-                            elif trans[-1] == 'L':
-                                add_config = go_left(leftstr, rightstr, trans, reject_state, rej=True)
+                            add_config = go_right(leftstr, rightstr, trans, reject_state, rej=True)
                             level_configs.append(add_config)
 
         if level_configs:
@@ -88,7 +85,7 @@ def bfs(transitions, transitions_dict, info):
     for config in configurations:
         print(config)
 
-def go_left(leftstr, rightstr, trans, reject_state=None, rej=False):
+def go_left(leftstr, rightstr, trans):
     # if the left string is empty make it into a blank
     if len(leftstr) == 0:
         leftstr += '_'
@@ -97,13 +94,7 @@ def go_left(leftstr, rightstr, trans, reject_state=None, rej=False):
     newleft = leftstr[:-1]
     newright = trans[3] + rightstr
 
-    if rej:
-        newright = leftstr[-1] + rightstr
-        print(leftstr, rightstr, trans, [newleft, reject_state, newright])
-        return [newleft, reject_state, newright]
-    else:
-        newright = trans[3] + rightstr[0]
-        return [newleft, trans[2], newright]
+    return [newleft, trans[2], newright]
 
 def go_right(leftstr, rightstr, trans, reject_state=None, rej=False):
     if len(rightstr) <= 1:
