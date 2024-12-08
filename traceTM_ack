@@ -1,0 +1,129 @@
+#!/usr/bin/env python3
+
+import csv, time
+from collections import defaultdict
+
+def read_csv(csvfile, inputstr):
+    file_name = csvfile
+    transitions = []
+    with open(file_name, mode ='r')as file:
+        csvFile = csv.reader(file)
+        for line, lines in enumerate(csvFile):
+            #first line grab name of machine
+            if line == 0:
+                name = lines
+            elif line == 4:
+                start = lines
+            elif line == 5:
+                accept = lines
+            elif line == 6:
+                reject = lines
+            elif line >= 7:
+                transitions.append(lines)
+        info = [start, accept, reject, inputstr]
+        transitions_dict = transdict(transitions)
+        bfs(transitions, transitions_dict, info)
+            
+def transdict(transitions):
+    transitions_dict = defaultdict(list)
+    for transition in transitions:
+        if transitions_dict[transition[0]]:
+            transitions_dict[transition[0]].append(transition)
+        else:
+            transitions_dict[transition[0]] = []
+            transitions_dict[transition[0]].append(transition)
+    return dict(transitions_dict)
+
+def bfs(transitions, transitions_dict, info):
+    #variables
+    notfound = True
+    level = 0
+    curr_state = ''.join(info[0])
+    accept_state = ''.join(info[1])
+    reject_state = ''.join(info[2])
+    ogstr = ''.join(info[3])
+
+    #configuration stuff
+    configurations = [[["", curr_state, ogstr]]]            # initial configuration
+
+    while notfound:
+        level_configs = []                                  # configurations for current level
+
+        # look at each configuration at the current
+        for config in configurations[level]:
+            leftstr = config[0]
+            rightstr = config[2]
+            curr_state = config[1]
+            check_char = rightstr[0]
+
+            if curr_state == reject_state:
+                continue
+
+            #check transitions for the current state
+            if curr_state in transitions_dict:
+                    for trans in transitions_dict[curr_state]:
+                        if trans[1] == check_char:
+                            if trans[-1] == 'R':
+                                add_config = go_right(leftstr, rightstr, trans)
+                            elif trans[-1] == 'L':
+                                add_config = go_left(leftstr, rightstr, trans)
+                            level_configs.append(add_config)
+                        else:
+                            if trans[-1] == 'R':
+                                add_config = go_right(leftstr, rightstr, trans, reject_state, rej=True)
+                            elif trans[-1] == 'L':
+                                add_config = go_left(leftstr, rightstr, trans, reject_state, rej=True)
+                            level_configs.append(add_config)
+
+        if level_configs:
+            configurations.append(level_configs)
+
+        for config in configurations[level]:
+            if accept_state in config:
+                notfound = False
+                break
+
+        level += 1
+
+    for config in configurations:
+        print(config)
+
+def go_left(leftstr, rightstr, trans, reject_state=None, rej=False):
+    # if the left string is empty make it into a blank
+    if len(leftstr) == 0:
+        leftstr += '_'
+
+    # if the new transition makes the left string empty 
+    newleft = leftstr[:-1]
+    newright = trans[3] + rightstr
+
+    if rej:
+        newright = leftstr[-1] + rightstr
+        print(leftstr, rightstr, trans, [newleft, reject_state, newright])
+        return [newleft, reject_state, newright]
+    else:
+        newright = trans[3] + rightstr[0]
+        return [newleft, trans[2], newright]
+
+def go_right(leftstr, rightstr, trans, reject_state=None, rej=False):
+    if len(rightstr) <= 1:
+        rightstr += '_'
+
+    newright = rightstr[1:]
+    if len(newright) == 0:
+        newright = '_'
+
+    if rej:
+        newleft = leftstr + rightstr[0]
+        print(leftstr, rightstr, trans, [newleft, reject_state, newright])
+        return [newleft, reject_state, newright]
+    else:
+        newleft = leftstr + trans[3]
+        return [newleft, trans[2], newright]
+
+def main():
+    inputstr = "aaa"
+    read_csv("a_plus.csv", inputstr)
+
+if __name__ == "__main__":
+    main()
