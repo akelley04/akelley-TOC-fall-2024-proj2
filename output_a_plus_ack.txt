@@ -1,0 +1,30 @@
+Machine Name: a plus
+Initial String: 
+Depth of configurations tree: 1
+Total number of transitions: 1
+Nondeterminism: 1.0
+String rejected in 1
+[['', 'q1', '_', '_']]
+[['_', 'qreject', '_', '_']]
+
+Machine Name: a plus
+Initial String: aaa
+Depth of configurations tree: 4
+Total number of transitions: 10
+Nondeterminism: 2.5
+String accepted in 4
+[['', 'q1', 'a', 'aaa']]
+[['a', 'q1', 'a', 'aa'], ['a', 'q2', 'a', 'aa']]
+[['aa', 'q2', 'a', 'a'], ['aa', 'q1', 'a', 'a'], ['aa', 'qreject', 'a', 'a']]
+[['aaa', 'q1', '_', '_'], ['aaa', 'q2', '_', '_'], ['aaa', 'qreject', '_', '_']]
+[['aaa_', 'qreject', '_', '_'], ['aa', 'q3', '_', '__']]
+
+Machine Name: a plus
+Initial String: a
+Depth of configurations tree: 2
+Total number of transitions: 4
+Nondeterminism: 2.0
+String accepted in 2
+[['', 'q1', 'a', 'a']]
+[['a', 'q2', '_', '_'], ['a', 'q1', '_', '_']]
+[['a_', 'qreject', '_', '_'], ['', 'q3', '_', '__']]

@@ -1,0 +1,55 @@
+Machine Name: a*b*c* Nondeterministic
+Initial String: 
+Depth of configurations tree: 2
+Total number of transitions: 3
+Nondeterminism: 1.5
+String accepted in 2
+[['', 'q0', '_', '_']]
+[['_', 'qrej', '_', '_'], ['_', 'q3', '_', '_']]
+[['__', 'qacc', '_', '_']]
+
+Machine Name: a*b*c* Nondeterministic
+Initial String: abc
+Depth of configurations tree: 4
+Total number of transitions: 14
+Nondeterminism: 3.5
+String accepted in 4
+[['', 'q0', 'a', 'abc']]
+[['a', 'q1', 'b', 'bc'], ['a', 'q2', 'b', 'bc'], ['a', 'q3', 'b', 'bc'], ['a', 'q0', 'b', 'bc'], ['a', 'qrej', 'b', 'bc']]
+[['ab', 'q2', 'c', 'c'], ['ab', 'q1', 'c', 'c'], ['ab', 'qrej', 'c', 'c'], ['ab', 'q3', 'c', 'c']]
+[['abc', 'q3', '_', '_'], ['abc', 'q2', '_', '_'], ['abc', 'qrej', '_', '_']]
+[['abc_', 'qacc', '_', '_'], ['abc_', 'qrej', '_', '_']]
+
+Machine Name: a*b*c* Nondeterministic
+Initial String: abbb
+Depth of configurations tree: 5
+Total number of transitions: 19
+Nondeterminism: 3.8
+String accepted in 5
+[['', 'q0', 'a', 'abbb']]
+[['a', 'q0', 'b', 'bbb'], ['a', 'qrej', 'b', 'bbb'], ['a', 'q2', 'b', 'bbb'], ['a', 'q3', 'b', 'bbb'], ['a', 'q1', 'b', 'bbb']]
+[['ab', 'q3', 'b', 'bb'], ['ab', 'qrej', 'b', 'bb'], ['ab', 'q1', 'b', 'bb'], ['ab', 'q2', 'b', 'bb']]
+[['abb', 'q2', 'b', 'b'], ['abb', 'q1', 'b', 'b'], ['abb', 'qrej', 'b', 'b'], ['abb', 'q3', 'b', 'b']]
+[['abbb', 'q1', '_', '_'], ['abbb', 'q3', '_', '_'], ['abbb', 'qrej', '_', '_'], ['abbb', 'q2', '_', '_']]
+[['abbb_', 'qacc', '_', '_'], ['abbb_', 'qrej', '_', '_']]
+
+Machine Name: a*b*c* Nondeterministic
+Initial String: cc
+Depth of configurations tree: 3
+Total number of transitions: 8
+Nondeterminism: 2.6666666666666665
+String accepted in 3
+[['', 'q0', 'c', 'cc']]
+[['c', 'q3', 'c', 'c'], ['c', 'qrej', 'c', 'c'], ['c', 'q2', 'c', 'c']]
+[['cc', 'q3', '_', '_'], ['cc', 'q2', '_', '_'], ['cc', 'qrej', '_', '_']]
+[['cc_', 'qacc', '_', '_'], ['cc_', 'qrej', '_', '_']]
+
+Machine Name: a*b*c* Nondeterministic
+Initial String: ba
+Depth of configurations tree: 2
+Total number of transitions: 5
+Nondeterminism: 2.5
+String rejected in 2
+[['', 'q0', 'b', 'ba']]
+[['b', 'qrej', 'a', 'a'], ['b', 'q1', 'a', 'a'], ['b', 'q3', 'a', 'a'], ['b', 'q2', 'a', 'a']]
+[['ba', 'qrej', '_', '_']]

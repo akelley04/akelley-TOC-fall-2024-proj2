@@ -9,23 +9,27 @@ def read_csv(csvfile, inputstr):
     with open(file_name, mode ='r')as file:
         csvFile = csv.reader(file)
         for line, lines in enumerate(csvFile):
-            #first line grab name of machine
+            # first line grab name of machine
             if line == 0:
                 name = lines
+            # grab start state 
             elif line == 4:
                 start = lines
+            # grab accept state 
             elif line == 5:
                 accept = lines
+            # grab reject state 
             elif line == 6:
                 reject = lines
+            # grab transitions
             elif line >= 7:
                 transitions.append(lines)
         info = [start, accept, reject, inputstr]
         transitions_dict = transdict(transitions)
-        configurations = bfs(transitions, transitions_dict, info)
+        configurations, rejected = bfs(transitions, transitions_dict, info)
 
-    for config in configurations:
-        print(config)
+    #output
+    output(name, info, configurations, rejected)
             
 def transdict(transitions):
     transitions_dict = defaultdict(list)
@@ -41,36 +45,31 @@ def bfs(transitions, transitions_dict, info):
     accept_state = ''.join(info[1])
     reject_state = ''.join(info[2])
     ogstr = ''.join(info[3])
+    maxdepth = 50
+    rejected = False
 
-    #configuration stuff
-    configurations = [[["", curr_state, ogstr]]]            # initial configuration
-    
     #if the string is empty check for any transitions else reject
     if not ogstr:
         ogstr = "_"
-    #     for transition in transitions:
-    #         print(transition)
-    #         # check the state in transitions dict and if the input matches a transition
-    #         # if find a transition, do it
-    #         if (curr_state in transitions_dict) and (ogstr == transitions_dict[curr_state][1]):
-    #             add_config = go_right("", ogstr, transition)
-    #             configurations.append(add_config)
-    #         # if transition match is not found, go into a reject state
-    #         else:
-    #             add_config = go_right("", ogstr, transition, reject_state=reject_state, rej=True)
-    #             configurations.append(add_config)
-    #     return configurations                    
+
+    #configuration stuff
+    configurations = [[["", curr_state, ogstr[0], ogstr]]]            # initial configuration
+    
+
     while notfound:
         level_configs = []                                  # configurations for current level
 
+
+        if level >= len(configurations) or level >= maxdepth:
+            rejected = True
+            return configurations, rejected
+        
         # look at each configuration at the current
         for config in configurations[level]:
             leftstr = config[0]
-            rightstr = config[2]
+            rightstr = config[-1]
             curr_state = config[1]
             check_char = rightstr[0] if rightstr else '_'
-
-            print(f'right string: {rightstr}')
 
             if curr_state == reject_state:
                 continue
@@ -100,7 +99,7 @@ def bfs(transitions, transitions_dict, info):
 
         level += 1
 
-    return configurations
+    return configurations, rejected
 
 def go_left(leftstr, rightstr, trans):
     # if the left string is empty make it into a blank
@@ -112,7 +111,7 @@ def go_left(leftstr, rightstr, trans):
     newright = trans[3] + rightstr
 
     #new configuration
-    return [newleft, trans[2], newright]
+    return [newleft, trans[2], newright[0], newright]
 
 def go_right(leftstr, rightstr, trans, reject_state=None, rej=False):
     # if the right string needs a character to read in
@@ -126,15 +125,34 @@ def go_right(leftstr, rightstr, trans, reject_state=None, rej=False):
     if rej:
         #if does go to reject state, newleft is leftstr with head of rightstr and new state is reject state
         newleft = leftstr + rightstr[0]
-        return [newleft, reject_state, newright]
+        return [newleft, reject_state, newright[0], newright]
     else:
         #if does not go to a reject state, newleft is left str with rewrite character added and the state transition specified
         newleft = leftstr + trans[3]
-        return [newleft, trans[2], newright]
+        return [newleft, trans[2], newright[0], newright]
+
+def output(name, info, configurations, rejected):
+    print(f'Machine Name: {"".join(name)}')
+    print(f'Initial String: {info[3]}')
+    depth = len(configurations) - 1
+    print(f'Depth of configurations tree: {depth}')
+    transitions = sum(len(configuration) for configuration in configurations) - 1
+    print(f'Total number of transitions: {transitions}')
+    print(f'Nondeterminism: {transitions / depth}')
+
+    #when accepted
+    if rejected == False:
+        print(f'String accepted in {depth}')
+        for config in configurations:
+            print(config)
+    elif rejected == True:
+        print(f'String rejected in {depth}')
+        for config in configurations:
+            print(config)
 
 def main():
-    inputstr = ""
-    read_csv("abc_star.csv", inputstr)
+    inputstr = "ba"
+    read_csv("check-abc_star-ack.csv", inputstr)
 
 if __name__ == "__main__":
     main()
